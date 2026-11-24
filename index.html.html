@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أسرار الطبيعة - غرفة الهروب</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #071b2d, #14534b);
+  color: white;
+  text-align: center;
+  min-height: 100vh;
+}
+
+header {
+  padding: 22px;
+  background: #061522;
+}
+
+h1 { color: #b7f7d8; }
+
+.container {
+  max-width: 850px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  color: #17343a;
+  border-radius: 22px;
+  padding: 25px;
+  margin: 20px auto;
+  box-shadow: 0 8px 30px #0005;
+}
+
+.hidden { display: none; }
+
+.story {
+  background: #eaf7f1;
+  padding: 18px;
+  border-radius: 14px;
+  line-height: 1.9;
+  margin: 20px 0;
+}
+
+.question {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 25px 0;
+  line-height: 1.7;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  max-width: 550px;
+  margin: 10px auto;
+  padding: 14px;
+  border: 2px solid #b7d8d0;
+  border-radius: 12px;
+  background: #f5fbf8;
+  color: #17343a;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: #d9f3e7;
+}
+
+button {
+  padding: 13px 24px;
+  border: none;
+  border-radius: 12px;
+  background: #147d64;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 8px;
+}
+
+button:hover { background: #0c5d4a; }
+
+.message {
+  font-size: 19px;
+  font-weight: bold;
+  margin: 20px;
+  min-height: 30px;
+}
+
+.room-title {
+  color: #147d64;
+  font-size: 30px;
+}
+
+.progress {
+  background: #ffffff30;
+  max-width: 500px;
+  height: 12px;
+  margin: 15px auto;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: #b7f7d8;
+  height: 100%;
+  width: 0%;
+  transition: width .4s;
+}
+
+.timer {
+  color: #ffd66b;
+  font-size: 24px;
+  margin: 12px;
+}
+
+.code-digit {
+  font-size: 48px;
+  color: #147d64;
+  letter-spacing: 8px;
+  font-weight: bold;
+}
+
+.final-code {
+  font-size: 42px;
+  letter-spacing: 8px;
+  color: #147d64;
+  font-weight: bold;
+}
+
+footer {
+  padding: 20px;
+  color: #c7d9d9;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌿 أسرار الطبيعة</h1>
+  <p>مهمة البيوميميكري - غرفة الهروب العلمية</p>
+  <div class="timer" id="timer">30:00</div>
+
+  <div class="progress">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- البداية -->
+
+<div class="card" id="start">
+
+  <h2>🔐 مركز الابتكار العالمي</h2>
+
+  <div class="story">
+    في عام 2045، واجه العالم أزمة بيئية خطيرة.
+
+    أصبحت المياه والطاقة والهواء النظيف
+    موارد مهددة.
+
+    اكتشف العلماء أن الطبيعة تمتلك حلولًا
+    عبقرية لمشكلات الإنسان.
+
+    لكن أرشيف المعرفة الطبيعية أُغلق
+    داخل خمس غرف سرية.
+
+    أنتم فريق علماء المستقبل.
+
+    مهمتكم دخول الغرف الخمس، حل الأسئلة،
+    جمع الأرقام السرية، وفتح خزنة المستقبل.
+
+    أمامكم 30 دقيقة فقط!
+
+    هل أنتم مستعدون؟
+  </div>
+
+  <button onclick="startGame()">🚀 ابدأ المهمة</button>
+
+</div>
+
+
+<!-- اللعبة -->
+
+<div class="card hidden" id="game">
+
+  <div id="roomNumber"></div>
+
+  <h2 class="room-title" id="roomTitle"></h2>
+
+  <div class="story" id="roomStory"></div>
+
+  <div id="questionCounter"></div>
+
+  <div class="question" id="questionText"></div>
+
+  <div id="options"></div>
+
+  <div class="message" id="message"></div>
+
+  <div id="roomReward" class="hidden">
+    <h2>🎉 تم فتح الغرفة!</h2>
+    <p>الرقم السري لهذه الغرفة هو:</p>
+    <div class="code-digit" id="digit"></div>
+    <p>احفظوا الرقم، فقد تحتاجون إليه في النهاية.</p>
+    <button onclick="nextRoom()">انتقلوا إلى الغرفة التالية</button>
+  </div>
+
+</div>
+
+
+<!-- الخزنة النهائية -->
+
+<div class="card hidden" id="final">
+
+  <h2>🔒 خزنة المستقبل</h2>
+
+  <div class="story">
+    لقد نجحتم في حل ألغاز الغرف الخمس!
+
+    أمامكم خزنة مركز الابتكار.
+
+    اجمعوا الأرقام التي حصلتم عليها
+    من الغرف بالترتيب، ثم أدخلوا
+    الكود النهائي لفتح الخزنة.
+  </div>
+
+  <input id="finalInput"
+         type="text"
+         inputmode="numeric"
+         maxlength="5"
+         placeholder="أدخلوا الكود المكوّن من 5 أرقام"
+         style="padding:15px;font-size:22px;text-align:center;width:90%;max-width:400px;border-radius:12px;border:2px solid #147d64">
+
+  <br>
+
+  <button onclick="checkFinalCode()">فتح الخزنة</button>
+
+  <div class="message" id="finalMessage"></div>
+
+</div>
+
+
+<!-- النجاح -->
+
+<div class="card hidden" id="success">
+
+  <h1>🏆 تم إنقاذ المستقبل!</h1>
+
+  <div class="story">
+    أحسنتم يا علماء المستقبل!
+
+    لقد اكتشفتم أن الطبيعة ليست مجرد
+    مصدر للجمال، بل هي معلم ومهندس ومبتكر.
+
+    تعلمتم كيف ألهمت الكائنات الحية
+    الإنسان لتطوير حلول مستدامة.
+
+    لقد فُتحت خزنة المعرفة الطبيعية!
+  </div>
+
+  <h2>🌱 تعلم من الطبيعة وابتكر مستقبلًا أفضل</h2>
+
+  <button onclick="location.reload()">إعادة اللعبة</button>
+
+</div>
+
+</div>
+
+<footer>
+  البيوميميكري - عندما تصبح الطبيعة مصدرًا للابتكار
+</footer>
+
+
+<script>
+
+const rooms = [
+
+{
+  title: "🦎 الغرفة الأولى: جدار المستحيل",
+  story: "وصلتم إلى غرفة الجدران الزجاجية. أمامكم وزغ يتسلق سطحًا أملسًا. اكتشفوا سر الالتصاق الذي ألهم العلماء.",
+  digit: "7",
+  questions: [
+    {
+      q: "أي كائن ألهم العلماء لتطوير مواد تساعد على الالتصاق بالأسطح؟",
+      options: ["الوزغ", "الفراشة", "السمكة"],
+      correct: 0
+    },
+    {
+      q: "ما الجزء الموجود في أقدام الوزغ الذي يساعده على الالتصاق؟",
+      options: ["الأظافر الطويلة فقط", "شعيرات دقيقة جدًا", "الأجنحة"],
+      correct: 1
+    },
+    {
+      q: "ما الفائدة التي استفاد منها الإنسان من دراسة أقدام الوزغ؟",
+      options: ["زيادة وزن المواد", "تطوير مواد لاصقة", "إنتاج الوقود"],
+      correct: 1
+    }
+  ]
+},
+
+{
+  title: "🌸 الغرفة الثانية: قطرة الماء",
+  story: "دخلتم إلى غرفة مليئة بقطرات الماء. تظهر أمامكم أوراق نبات تبقى نظيفة رغم تعرضها للماء والغبار.",
+  digit: "2",
+  questions: [
+    {
+      q: "أي نبات ألهم العلماء لتطوير أسطح ذاتية التنظيف؟",
+      options: ["الصبار", "زهرة اللوتس", "شجرة الزيتون"],
+      correct: 1
+    },
+    {
+      q: "ماذا يحدث لقطرات الماء على ورقة اللوتس؟",
+      options: ["تنتشر وتلتصق", "تتحول إلى زيت", "تتجمع وتتدحرج"],
+      correct: 2
+    },
+    {
+      q: "ما الابتكار المستوحى من ورقة اللوتس؟",
+      options: ["طلاءات ذاتية التنظيف", "محركات كهربائية", "مصابيح حرارية"],
+      correct: 0
+    }
+  ]
+},
+
+{
+  title: "🏜️ الغرفة الثالثة: مدينة بلا مكيفات",
+  story: "أصبحت المدينة شديدة الحرارة. يبحث المهندسون عن مبانٍ تحافظ على درجة حرارة مناسبة دون استهلاك كبير للطاقة.",
+  digit: "4",
+  questions: [
+    {
+      q: "أي كائن ألهم تصميم مبانٍ ذات تهوية طبيعية؟",
+      options: ["النمل الأبيض", "الدلفين", "النسر"],
+      correct: 0
+    },
+    {
+      q: "ما الذي تتميز به تلال النمل الأبيض؟",
+      options: ["لا تحتوي على هواء", "تساعد على تنظيم التهوية", "تنتج الكهرباء"],
+      correct: 1
+    },
+    {
+      q: "ما الفائدة من تقليد تلال النمل الأبيض في البناء؟",
+      options: ["زيادة استهلاك الطاقة", "تقليل الحاجة إلى التكييف", "زيادة حرارة المبنى"],
+      correct: 1
+    }
+  ]
+},
+
+{
+  title: "🦈 الغرفة الرابعة: سر السرعة",
+  story: "وصلتم إلى غرفة المحيطات. يريد العلماء تصميم وسائل نقل تتحرك في الماء بكفاءة أكبر.",
+  digit: "6",
+  questions: [
+    {
+      q: "أي كائن ألهم العلماء لتطوير أسطح تقلل مقاومة الماء؟",
+      options: ["القرش", "قنديل البحر", "الأخطبوط"],
+      correct: 0
+    },
+    {
+      q: "ما الجزء الذي دُرس في جسم القرش؟",
+      options: ["العيون", "الجلد والقشور الدقيقة", "الذيل فقط"],
+      correct: 1
+    },
+    {
+      q: "ما الفائدة من تقليد جلد القرش؟",
+      options: ["زيادة مقاومة الماء", "تقليل الاحتكاك والمقاومة", "زيادة حجم الجسم"],
+      correct: 1
+    }
+  ]
+},
+
+{
+  title: "🐋 الغرفة الخامسة: طاقة المستقبل",
+  story: "بقيت غرفة واحدة. يبحث العلماء عن تصميمات أكثر كفاءة لتوربينات الرياح وأجنحة الطائرات.",
+  digit: "9",
+  questions: [
+    {
+      q: "أي كائن ألهم العلماء بتصميم زعانفه؟",
+      options: ["الحوت الأحدب", "السلحفاة", "التمساح"],
+      correct: 0
+    },
+    {
+      q: "ما المميز في حواف زعانف الحوت الأحدب؟",
+      options: ["وجود نتوءات", "وجود أضواء", "وجود ريش"],
+      correct: 0
+    },
+    {
+      q: "ما المجال الذي استفاد من دراسة زعانف الحوت؟",
+      options: ["تصميم توربينات الرياح", "صناعة الورق", "إنتاج الأدوية فقط"],
+      correct: 0
+    }
+  ]
+}
+
+];
+
+let roomIndex = 0;
+let questionIndex = 0;
+let correctCount = 0;
+let roomDigits = [];
+let timeLeft = 1800;
+let timerInterval;
+let started = false;
+
+function startGame() {
+  if (started) return;
+
+  started = true;
+
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+
+  showQuestion();
+
+  timerInterval = setInterval(function() {
+    timeLeft--;
+
+    let min = Math.floor(timeLeft / 60);
+    let sec = timeLeft % 60;
+
+    document.getElementById("timer").innerText =
+      String(min).padStart(2, "0") + ":" +
+      String(sec).padStart(2, "0");
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert("انتهى الوقت! حاولوا مرة أخرى.");
+      location.reload();
+    }
+  }, 1000);
+}
+
+function showQuestion() {
+  const room = rooms[roomIndex];
+  const question = room.questions[questionIndex];
+
+  document.getElementById("roomNumber").innerText =
+    "الغرفة " + (roomIndex + 1) + " من " + rooms.length;
+
+  document.getElementById("roomTitle").innerText =
+    room.title;
+
+  document.getElementById("roomStory").innerText =
+    room.story;
+
+  document.getElementById("questionCounter").innerText =
+    "السؤال " + (questionIndex + 1) + " من 3";
+
+  document.getElementById("questionText").innerText =
+    question.q;
+
+  document.getElementById("message").innerText = "";
+
+  document.getElementById("options").innerHTML = "";
+
+  question.options.forEach(function(option, index) {
+    const button = document.createElement("button");
+
+    button.className = "option";
+    button.innerText = option;
+
+    button.onclick = function() {
+      checkAnswer(index);
+    };
+
+    document.getElementById("options").appendChild(button);
+  });
+
+  document.getElementById("progress").style.width =
+    ((roomIndex * 3 + questionIndex) / 15 * 100) + "%";
+}
+
+function checkAnswer(selected) {
+  const question = rooms[roomIndex].questions[questionIndex];
+
+  if (selected === question.correct) {
+    correctCount++;
+
+    document.getElementById("message").innerText =
+      "✅ إجابة صحيحة!";
+
+    document.getElementById("message").style.color =
+      "#147d64";
+
+    document.querySelectorAll(".option").forEach(function(button) {
+      button.disabled = true;
+      button.style.opacity = "0.6";
+    });
+
+    setTimeout(function() {
+      questionIndex++;
+
+      if (questionIndex < 3) {
+        showQuestion();
+      } else {
+        completeRoom();
+      }
+    }, 900);
+
+  } else {
+    document.getElementById("message").innerText =
+      "❌ إجابة غير صحيحة. حاولوا مرة أخرى.";
+
+    document.getElementById("message").style.color =
+      "#c0392b";
+  }
+}
+
+function completeRoom() {
+  const room = rooms[roomIndex];
+
+  roomDigits.push(room.digit);
+
+  document.getElementById("options").innerHTML = "";
+
+  document.getElementById("questionText").innerText = "";
+
+  document.getElementById("questionCounter").innerText =
+    "أجبتم عن الأسئلة الثلاثة بنجاح!";
+
+  document.getElementById("message").innerText = "";
+
+  document.getElementById("roomReward").classList.remove("hidden");
+
+  document.getElementById("digit").innerText = room.digit;
+
+  document.getElementById("progress").style.width =
+    ((roomIndex + 1) / 5 * 100) + "%";
+}
+
+function nextRoom() {
+  roomIndex++;
+  questionIndex = 0;
+
+  document.getElementById("roomReward").classList.add("hidden");
+
+  if (roomIndex < rooms.length) {
+    showQuestion();
+  } else {
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("final").classList.remove("hidden");
+  }
+}
+
+function checkFinalCode() {
+  const input = document.getElementById("finalInput").value.trim();
+  const correctCode = roomDigits.join("");
+
+  if (input === correctCode) {
+    clearInterval(timerInterval);
+
+    document.getElementById("final").classList.add("hidden");
+    document.getElementById("success").classList.remove("hidden");
+
+    document.getElementById("progress").style.width = "100%";
+  } else {
+    document.getElementById("finalMessage").innerText =
+      "❌ الكود غير صحيح. راجعوا الأرقام التي حصلتم عليها.";
+
+    document.getElementById("finalMessage").style.color =
+      "#c0392b";
+  }
+}
+
+</script>
+
+</body>
+</html>
